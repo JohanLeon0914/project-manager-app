@@ -45,8 +45,17 @@ const ProyectoUsuario = ({ projectId }) => {
   }, [projectId]);
 
   if (loading) {
-    return <p>Cargando datos...</p>;
+    return (
+      <div className="flex justify-center items-center h-screen bg-gray-50">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500 mx-auto mb-4"></div>
+          <p className="text-xl font-medium text-gray-700">Cargando datos...</p>
+          <p className="text-sm text-gray-500 mt-2">Esto puede tomar unos segundos</p>
+        </div>
+      </div>
+    );
   }
+  
 
   if (error) {
     return <p className="text-red-600">{error}</p>;

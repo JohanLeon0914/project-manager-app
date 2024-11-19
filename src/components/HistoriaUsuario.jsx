@@ -17,6 +17,8 @@ const HistoriaUsuario = ({ historiaId }) => {
 
   useEffect(() => {
     const obtenerHistoria = async () => {
+      setLoading(true);
+      setError(null);
       try {
         const historiaRef = doc(db, "historias-de-usuario", historiaId);
         const docSnap = await getDoc(historiaRef);
@@ -29,6 +31,8 @@ const HistoriaUsuario = ({ historiaId }) => {
         }
       } catch (err) {
         setError("Hubo un error al obtener la historia");
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -94,8 +98,8 @@ const HistoriaUsuario = ({ historiaId }) => {
     } catch (err) {
       setError("Hubo un error al eliminar el ticket");
     } finally {
-      setLoading(false); // Terminar el estado de carga
-      setTimeout(() => setSuccessMessage(""), 3000); // Ocultar el mensaje después de 3 segundos
+      setLoading(false);
+      setTimeout(() => setSuccessMessage(""), 3000);
     }
   };
 
@@ -117,7 +121,7 @@ const HistoriaUsuario = ({ historiaId }) => {
 
   const agregarNuevoTicket = async (e) => {
     e.preventDefault();
-    setLoading(true); // Mostrar el estado de carga
+    setLoading(true);
 
     try {
       const historiaRef = doc(db, "historias-de-usuario", historiaId);
@@ -135,8 +139,8 @@ const HistoriaUsuario = ({ historiaId }) => {
     } catch (err) {
       setError("Hubo un error al agregar el ticket");
     } finally {
-      setLoading(false); // Terminar el estado de carga
-      setTimeout(() => setSuccessMessage(""), 3000); // Ocultar el mensaje después de 3 segundos
+      setLoading(false);
+      setTimeout(() => setSuccessMessage(""), 3000);
     }
   };
 
@@ -150,9 +154,16 @@ const HistoriaUsuario = ({ historiaId }) => {
   return (
     <div className="p-6 bg-white shadow-md rounded-lg max-w-4xl mx-auto mt-10">
       {loading && (
-        <div className="flex justify-center items-center space-x-2 mb-4">
-          <div className="animate-spin rounded-full border-4 border-t-4 border-gray-200 h-8 w-8"></div>
-          <p className="text-gray-600">Cargando...</p>
+        <div className="flex justify-center items-center h-screen bg-gray-50">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500 mx-auto mb-4"></div>
+            <p className="text-xl font-medium text-gray-700">
+              Cargando Historia de usuario...
+            </p>
+            <p className="text-sm text-gray-500 mt-2">
+              Esto puede tomar unos segundos
+            </p>
+          </div>
         </div>
       )}
       {successMessage && (
@@ -349,7 +360,8 @@ const HistoriaUsuario = ({ historiaId }) => {
           )}
         </div>
       ) : (
-        <p className="text-red-600">Historia no encontrada.</p>
+        !loading &&
+        !error && <p className="text-red-600">Historia no encontrada.</p>
       )}
     </div>
   );
