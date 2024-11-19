@@ -10,7 +10,7 @@ const { projectId } = Astro.params;
 <Layout title="Crear Historia de Usuario">
   <main class="max-w-4xl mx-auto p-6 pt-[50px]">
     <BackButton route={`/proyecto/${projectId}`} />
-    <div class="bg-white shadow-lg rounded-lg p-8">
+    <div class="bg-white shadow-lg rounded-lg p-8 mt-4">
       <HistoriaFormulario client:load project_id={projectId} />
     </div>
   </main>
