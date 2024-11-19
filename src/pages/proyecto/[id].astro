@@ -1,0 +1,18 @@
+---
+import ProyectoUsuario from '../../components/ProyectoUsuario';
+
+const { id } = Astro.params; 
+---
+
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Proyecto de Usuario</title>
+  </head>
+  <body>
+    <div>
+      <ProyectoUsuario projectId={id} client:load />
+    </div>
+  </body>
+</html>

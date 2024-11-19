@@ -1,0 +1,18 @@
+---
+import HistoriaUsuario from '../../components/HistoriaUsuario';
+
+const { id } = Astro.params; 
+---
+
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Historia de Usuario</title>
+  </head>
+  <body>
+    <div>
+      <HistoriaUsuario historiaId={id} client:load />
+    </div>
+  </body>
+</html>

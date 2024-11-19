@@ -1,0 +1,14 @@
+---
+import GoogleAuthButton from '../components/GoogleLoginButton';
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Bienvenido.">
+	<main class="flex flex-col items-center justify-center min-h-screen bg-gray-50">
+	  <h1 class="text-3xl font-bold text-gray-800 mb-6">
+		Bienvenido a la aplicación
+	  </h1>
+	  
+	  <GoogleAuthButton client:visible />
+	</main>
+  </Layout>
