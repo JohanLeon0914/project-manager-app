@@ -84,16 +84,16 @@ const ProyectoUsuario = ({ projectId }) => {
             Proyecto: {proyecto?.nombre}
           </h2>
           <hr />
-          <h3 className="text-2xl font-semibold text-gray-800 my-4">
-            Historias de usuario:
-          </h3>
-
           <button
             onClick={redirigirACrearHistoria}
-            className="bg-green-500 text-white px-4 py-2 rounded-lg mb-6 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="bg-green-500 text-white px-4 py-2 rounded-lg mb-6 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 my-4"
           >
-            Crear nueva historia
+            Crear historia de usuario
           </button>
+
+          <h3 className="text-2xl font-semibold text-gray-800 mb-2">
+            Historias de usuario:
+          </h3>
 
           {historias.length > 0 ? (
             <ul className="space-y-4">

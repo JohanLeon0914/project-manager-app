@@ -103,17 +103,25 @@ const HistoriaUsuario = ({ historiaId }) => {
     }
   };
 
-  const confirmarEliminacion = (index) => {
-    const ticket = ticketsEditados[index];
-
-    if (ticket.estado === "Activo") {
-      if (window.confirm("¿Estás seguro de que deseas cancelar este ticket?")) {
-        eliminarTicket(index);
-      }
-    } else {
-      alert("Solo los tickets activos pueden ser cancelados.");
+  const confirmarEliminacion = async (index) => {
+    setLoading(true);
+    try {
+      const ticket = historia.tickets[index]; 
+  
+        if (ticket.estado === "Activo") {
+          if (window.confirm("¿Estás seguro de que deseas cancelar este ticket?")) {
+            eliminarTicket(index);  
+          }
+        } else {
+          alert("Solo los tickets activos pueden ser cancelados. Prueba cambiar el estado del ticket a activo y guardar los cambios.");
+        }
+    } catch (err) {
+      setError("Hubo un error al verificar el estado del ticket.");
+    } finally {
+      setLoading(false);
     }
   };
+  
 
   const agregarNuevoTicket = async (e) => {
     e.preventDefault();
@@ -192,10 +200,15 @@ const HistoriaUsuario = ({ historiaId }) => {
           )}
 
           {mostrarFormulario && (
-            <form onSubmit={agregarNuevoTicket} className="space-y-4 mb-6">
-              <h1 className="text-2xl font-semibold text-gray-800 mb-4">
+            <form
+              onSubmit={agregarNuevoTicket}
+              className="space-y-6 mb-8 p-6 border rounded-lg shadow-sm bg-gray-50"
+            >
+              <h1 className="text-2xl font-semibold text-gray-800 mb-6">
                 Crear nuevo ticket
               </h1>
+
+              {/* Descripción */}
               <div className="flex flex-col">
                 <label className="font-medium text-gray-700">
                   Descripción:
@@ -206,11 +219,13 @@ const HistoriaUsuario = ({ historiaId }) => {
                   onChange={(e) =>
                     handleNuevoTicketChange("descripcion", e.target.value)
                   }
-                  className="p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                   required
                   disabled={loading}
                 />
               </div>
+
+              {/* Comentarios */}
               <div className="flex flex-col">
                 <label className="font-medium text-gray-700">
                   Comentarios:
@@ -220,11 +235,13 @@ const HistoriaUsuario = ({ historiaId }) => {
                   onChange={(e) =>
                     handleNuevoTicketChange("comentarios", e.target.value)
                   }
-                  className="p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                   required
                   disabled={loading}
                 />
               </div>
+
+              {/* Estado */}
               <div className="flex flex-col">
                 <label className="font-medium text-gray-700">Estado:</label>
                 <select
@@ -232,7 +249,7 @@ const HistoriaUsuario = ({ historiaId }) => {
                   onChange={(e) =>
                     handleNuevoTicketChange("estado", e.target.value)
                   }
-                  className="p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                   required
                   disabled={loading}
                 >
@@ -242,22 +259,24 @@ const HistoriaUsuario = ({ historiaId }) => {
                 </select>
               </div>
 
-              <div className="flex justify-between mt-4">
+              {/* Botones */}
+              <div className="flex justify-between mt-6">
                 <button
                   type="submit"
-                  className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+                  className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
                   disabled={loading}
                 >
                   Crear Ticket
                 </button>
                 <button
                   onClick={toggleFormulario}
-                  className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 disabled:opacity-50"
+                  className="bg-red-500 text-white px-6 py-3 rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 disabled:opacity-50"
                 >
                   Cancelar
                 </button>
               </div>
-              <hr className="m-4 " />
+
+              <hr className="my-6 border-gray-300" />
             </form>
           )}
 
@@ -268,7 +287,18 @@ const HistoriaUsuario = ({ historiaId }) => {
           {historia.tickets && historia.tickets.length > 0 ? (
             <ul>
               {ticketsEditados.map((ticket, index) => (
-                <li key={index} className="mb-4">
+                <li
+                  key={index}
+                  className="mb-6 p-4 border rounded-lg shadow-sm bg-gray-50"
+                >
+                  {/* Contador de ticket */}
+                  <div className="flex items-center mb-4">
+                    <span className="text-xl font-semibold text-blue-600">
+                      Ticket {index + 1}
+                    </span>
+                  </div>
+
+                  {/* Formulario del ticket */}
                   <form
                     onSubmit={(e) => {
                       e.preventDefault();
@@ -276,6 +306,7 @@ const HistoriaUsuario = ({ historiaId }) => {
                     }}
                     className="space-y-4"
                   >
+                    {/* Descripción */}
                     <div className="flex flex-col">
                       <label className="font-medium text-gray-700">
                         Descripción:
@@ -294,6 +325,8 @@ const HistoriaUsuario = ({ historiaId }) => {
                         readOnly={loading}
                       />
                     </div>
+
+                    {/* Comentarios */}
                     <div className="flex flex-col">
                       <label className="font-medium text-gray-700">
                         Comentarios:
@@ -311,6 +344,8 @@ const HistoriaUsuario = ({ historiaId }) => {
                         readOnly={loading}
                       />
                     </div>
+
+                    {/* Estado */}
                     <div className="flex flex-col">
                       <label className="font-medium text-gray-700">
                         Estado:
@@ -328,6 +363,8 @@ const HistoriaUsuario = ({ historiaId }) => {
                         <option value="Finalizado">Finalizado</option>
                       </select>
                     </div>
+
+                    {/* Botones */}
                     <div className="flex justify-between mt-4">
                       <button
                         type="submit"
@@ -342,7 +379,7 @@ const HistoriaUsuario = ({ historiaId }) => {
                         className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 disabled:opacity-50"
                         disabled={loading}
                       >
-                        Eliminar
+                        Cancelar Ticket
                       </button>
                     </div>
                   </form>
