@@ -1,11 +1,13 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import ProyectoFormulario from '../components/ProyectoFormulario';
+import BackButton from '../components/BackButton.astro';
 ---
 
 <Layout title="Crear Historia de Usuario">
-  <main class="max-w-4xl mx-auto p-6">
-    <h1 class="text-4xl font-semibold text-gray-800 mb-6">Crear Historia de Usuario</h1>
+  <main class="max-w-4xl mx-auto p-6 pt-[50px]">
+    <BackButton route="/dashboard" />
+    <h1 class="text-4xl font-semibold text-gray-800 my-6">Crear Historia de Usuario</h1>
 
     <div class="bg-white shadow-lg rounded-lg p-8">
       <p class="text-lg text-gray-600 mb-4">Rellene el formulario para crear una nuevo proyecto.</p>

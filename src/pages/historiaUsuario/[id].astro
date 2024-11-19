@@ -1,18 +1,14 @@
 ---
+import BackButton from '../../components/BackButton.astro';
 import HistoriaUsuario from '../../components/HistoriaUsuario';
-
+import Layout from '../../layouts/Layout.astro';
+const project_id  = Astro.url.searchParams.get('project_id') || '';
 const { id } = Astro.params; 
 ---
-
-<!DOCTYPE html>
-<html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Historia de Usuario</title>
-  </head>
-  <body>
-    <div>
-      <HistoriaUsuario historiaId={id} client:load />
-    </div>
-  </body>
-</html>
+<Layout title='Historia de usuario'>
+  <main class="max-w-4xl mx-auto p-6 pt-[50px]">
+    <BackButton route={`/proyecto/${project_id}`} />
+    <HistoriaUsuario historiaId={id} client:load />
+  </main>
+</Layout>
+    

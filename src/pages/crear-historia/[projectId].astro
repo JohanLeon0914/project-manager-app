@@ -2,16 +2,15 @@
 // Página dinámica de creación de historia de usuario
 import Layout from '../../layouts/Layout.astro';
 import HistoriaFormulario from '../../components/HistoriaFormulario';
+import BackButton from '../../components/BackButton.astro';
 
 const { projectId } = Astro.params; 
 ---
 
 <Layout title="Crear Historia de Usuario">
-  <main class="max-w-4xl mx-auto p-6">
+  <main class="max-w-4xl mx-auto p-6 pt-[50px]">
+    <BackButton route={`/proyecto/${projectId}`} />
     <div class="bg-white shadow-lg rounded-lg p-8">
-      <h1 class="text-4xl font-semibold text-gray-800 mb-4">Crear Historia de Usuario</h1>
-      <p class="text-lg text-gray-600 mb-6">Rellene el formulario para crear una nueva historia de usuario.</p>
-
       <HistoriaFormulario client:load project_id={projectId} />
     </div>
   </main>

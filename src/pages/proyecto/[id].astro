@@ -1,18 +1,16 @@
 ---
+import BackButton from '../../components/BackButton.astro';
 import ProyectoUsuario from '../../components/ProyectoUsuario';
+import Layout from '../../layouts/Layout.astro';
 
 const { id } = Astro.params; 
 ---
 
 <!DOCTYPE html>
-<html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Proyecto de Usuario</title>
-  </head>
-  <body>
-    <div>
-      <ProyectoUsuario projectId={id} client:load />
-    </div>
-  </body>
-</html>
+<Layout title='Proyecto'>
+  <main class="max-w-4xl mx-auto p-6 pt-[50px]">
+    <BackButton route="/dashboard" />
+    <ProyectoUsuario projectId={id} client:load />
+  </main>
+</Layout>
+    

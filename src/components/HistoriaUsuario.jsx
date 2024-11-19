@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { db } from "../lib/firebase";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 
@@ -107,11 +107,7 @@ const HistoriaUsuario = ({ historiaId }) => {
     const ticket = ticketsEditados[index];
 
     if (ticket.estado === "Activo") {
-      if (
-        window.confirm(
-          "¿Estás seguro de que deseas cancelar este ticket? Esto lo eliminará permanentemente."
-        )
-      ) {
+      if (window.confirm("¿Estás seguro de que deseas cancelar este ticket?")) {
         eliminarTicket(index);
       }
     } else {
@@ -180,8 +176,8 @@ const HistoriaUsuario = ({ historiaId }) => {
           <h2 className="text-3xl font-semibold text-gray-800 mb-4">
             {historia.titulo}
           </h2>
-          <p className="text-lg text-gray-600 mb-6">{historia.descripcion}</p>
-
+          <p className="text-lg text-gray-600 mb-4">{historia.descripcion}</p>
+          <hr className="mb-4" />
           {!mostrarFormulario && (
             <button
               onClick={toggleFormulario}
