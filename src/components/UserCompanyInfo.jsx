@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { auth, db } from "../lib/firebase";
 import { collection, getDocs, doc, getDoc, updateDoc, query, where } from "firebase/firestore";
+import GoogleLoginButton from "./GoogleLoginButton";
 
 const UserCompanySelector = () => {
   const [user, setUser] = useState(null);
@@ -109,6 +110,17 @@ const UserCompanySelector = () => {
 
   if (error) {
     return <div className="text-red-600 text-center py-6">{error}</div>;
+  }
+
+  if (!user) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
+        <p className="text-xl text-gray-700 mb-4">
+          No estás logueado. Por favor, inicia sesión para continuar.
+        </p>
+        <GoogleLoginButton />
+      </div>
+    );
   }
 
   return (

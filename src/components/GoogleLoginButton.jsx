@@ -56,7 +56,7 @@ const GoogleAuthButton = () => {
   };
 
   return (
-    <div className="max-w-sm mx-auto p-6 bg-white shadow-lg rounded-lg">
+    <div className="mx-auto p-6 bg-white shadow-lg rounded-lg">
       {user ? (
         <div className="text-center space-y-4">
           <p className="text-lg text-gray-800">
@@ -68,23 +68,11 @@ const GoogleAuthButton = () => {
           >
             Cerrar sesión
           </button>
-          <a
-            href="dashboard"
-            className="block w-full py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 text-center focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            Ir al Dashboard
-          </a>
-          <a
-            href="company"
-            className="block w-full py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 text-center focus:outline-none focus:ring-2 focus:ring-green-500"
-          >
-            Mi compañia
-          </a>
         </div>
       ) : (
         <button
           onClick={handleLogin}
-          className="w-full py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full py-2 m-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           Iniciar sesión con Google
         </button>
