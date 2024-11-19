@@ -2,15 +2,15 @@ import { useState, useEffect } from "react";
 import { auth, db } from "../lib/firebase";
 import { collection, getDocs, doc, getDoc, updateDoc, query, where } from "firebase/firestore";
 import GoogleLoginButton from "./GoogleLoginButton";
+import UserCompanySelector from "./UserCompanySelector"; // Importamos el componente
 
-const UserCompanySelector = () => {
+const UserCompanyInfo = () => {
   const [user, setUser] = useState(null);
   const [companies, setCompanies] = useState([]);
   const [selectedCompanyId, setSelectedCompanyId] = useState(null);
   const [companyInfo, setCompanyInfo] = useState(null);
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchUserAndCompanies = async () => {
@@ -18,8 +18,8 @@ const UserCompanySelector = () => {
         if (!user) return;
 
         setLoading(true);
-        setError(null);
 
+        // Obtener la lista de compañías
         const companiesCollection = collection(db, "companies");
         const querySnapshot = await getDocs(companiesCollection);
         const companiesList = querySnapshot.docs.map((doc) => ({
@@ -28,12 +28,15 @@ const UserCompanySelector = () => {
         }));
         setCompanies(companiesList);
 
+        // Verificar si el usuario tiene una compañía asociada
         const userCompaniesRef = collection(db, "users-companies");
         const userQuery = query(userCompaniesRef, where("user_email", "==", user.email));
         const userCompaniesSnapshot = await getDocs(userQuery);
 
         if (userCompaniesSnapshot.empty) {
-          throw new Error("No se encontró ninguna compañía asociada al usuario.");
+          setSelectedCompanyId(null); // Usuario sin compañía
+          setCompanyInfo(null);
+          return;
         }
 
         const userCompany = userCompaniesSnapshot.docs[0].data();
@@ -44,11 +47,9 @@ const UserCompanySelector = () => {
         const initialCompany = companiesList.find((company) => company.id === initialCompanyId);
         if (initialCompany) {
           setCompanyInfo(initialCompany);
-        } else {
-          throw new Error("La compañía asociada al usuario no existe en la lista de compañías.");
         }
       } catch (err) {
-        setError(err.message);
+        console.error("Error al obtener datos:", err.message);
       } finally {
         setLoading(false);
       }
@@ -69,8 +70,8 @@ const UserCompanySelector = () => {
     try {
       const newCompanyId = e.target.value;
       setUpdating(true);
-      setError(null);
 
+      // Actualizar la compañía del usuario
       const userCompaniesRef = collection(db, "users-companies");
       const userQuery = query(userCompaniesRef, where("user_email", "==", user.email));
       const userCompaniesSnapshot = await getDocs(userQuery);
@@ -82,15 +83,13 @@ const UserCompanySelector = () => {
         });
       }
 
-      // Actualizar la información de la nueva compañía seleccionada
       const newCompany = companies.find((company) => company.id === newCompanyId);
       setSelectedCompanyId(newCompanyId);
       setCompanyInfo(newCompany);
 
-      // Notificar al usuario
       alert("Compañía actualizada con éxito.");
     } catch (err) {
-      setError("Error al cambiar la compañía: " + err.message);
+      console.error("Error al cambiar la compañía:", err.message);
     } finally {
       setUpdating(false);
     }
@@ -108,10 +107,6 @@ const UserCompanySelector = () => {
     );
   }
 
-  if (error) {
-    return <div className="text-red-600 text-center py-6">{error}</div>;
-  }
-
   if (!user) {
     return (
       <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
@@ -121,6 +116,11 @@ const UserCompanySelector = () => {
         <GoogleLoginButton />
       </div>
     );
+  }
+
+  if (!selectedCompanyId) {
+    // Renderizar el componente de selección de compañía si no hay una asociada
+    return <UserCompanySelector userEmail={user.email} />;
   }
 
   return (
@@ -180,4 +180,4 @@ const UserCompanySelector = () => {
   );
 };
 
-export default UserCompanySelector;
+export default UserCompanyInfo;

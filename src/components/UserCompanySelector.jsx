@@ -40,7 +40,6 @@ const UserCompanySelector = () => {
 
     if (user) {
       try {
-        // Guardar la relación en Firestore
         await setDoc(doc(db, "users-companies", user.email), {
           user_email: user.email,
           companie_id: selectedCompany
