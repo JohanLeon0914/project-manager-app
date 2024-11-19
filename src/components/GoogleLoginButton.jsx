@@ -70,12 +70,14 @@ const GoogleAuthButton = () => {
           </button>
         </div>
       ) : (
-        <button
-          onClick={handleLogin}
-          className="w-full py-2 m-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-          Iniciar sesión con Google
-        </button>
+        <div className="flex justify-center">
+          <button
+            onClick={handleLogin}
+            className="py-2 px-6 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            Iniciar sesión con Google
+          </button>
+        </div>
       )}
     </div>
   );

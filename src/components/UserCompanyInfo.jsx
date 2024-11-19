@@ -110,7 +110,7 @@ const UserCompanyInfo = () => {
   if (!user) {
     return (
       <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
-        <p className="text-xl text-gray-700 mb-4">
+        <p className="text-red-600 text-xl font-medium mb-4">
           No estás logueado. Por favor, inicia sesión para continuar.
         </p>
         <GoogleLoginButton />
