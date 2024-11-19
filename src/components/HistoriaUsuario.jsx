@@ -126,17 +126,21 @@ const HistoriaUsuario = ({ historiaId }) => {
   const agregarNuevoTicket = async (e) => {
     e.preventDefault();
     setLoading(true);
-
+  
     try {
       const historiaRef = doc(db, "historias-de-usuario", historiaId);
       const updatedTickets = [...historia.tickets, nuevoTicket];
-
+  
       await updateDoc(historiaRef, {
         tickets: updatedTickets,
       });
-
+  
+      setHistoria((prevState) => ({
+        ...prevState,
+        tickets: updatedTickets,
+      }));
+  
       setTicketsEditados(updatedTickets);
-
       setSuccessMessage("Nuevo ticket creado exitosamente!");
       setNuevoTicket({ descripcion: "", comentarios: "", estado: "Activo" });
       setMostrarFormulario(false);
@@ -147,6 +151,7 @@ const HistoriaUsuario = ({ historiaId }) => {
       setTimeout(() => setSuccessMessage(""), 3000);
     }
   };
+  
 
   const toggleFormulario = () => {
     setMostrarFormulario((prev) => !prev);
