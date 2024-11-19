@@ -9,7 +9,6 @@ const UserCompanySelector = () => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    // Obtener las compañías
     const fetchCompanies = async () => {
       try {
         const companiesCollection = collection(db, "companies");
@@ -24,7 +23,6 @@ const UserCompanySelector = () => {
       }
     };
 
-    // Verificar si hay un usuario autenticado
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
     });

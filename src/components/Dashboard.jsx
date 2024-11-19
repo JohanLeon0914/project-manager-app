@@ -1,59 +1,68 @@
 import { useState, useEffect } from 'react';
-import { db, auth } from '../lib/firebase'; // Asegúrate de importar auth y db
-import { collection, query, where, getDocs } from 'firebase/firestore';
-import { checkUserCompany } from '../lib/firebase'; // Importa la función para obtener el companie_id
+import { db, auth } from '../lib/firebase';
+import { collection, query, where, getDocs, doc, getDoc } from 'firebase/firestore';
+import { checkUserCompany } from '../lib/firebase';
 
 const Dashboard = () => {
-  const [proyectos, setProyectos] = useState([]); // Almacenamos los proyectos
-  const [loading, setLoading] = useState(true); // Estado de carga
-  const [error, setError] = useState(null); // Para manejar errores
-  const [user, setUser] = useState(null); // Para almacenar el usuario autenticado
+  const [proyectos, setProyectos] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [user, setUser] = useState(null);
+  const [companyName, setCompanyName] = useState('');
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((currentUser) => {
       if (currentUser) {
-        setUser(currentUser); // Establece el usuario cuando se ha autenticado
+        setUser(currentUser);
       } else {
         setError('No estás logueado. Inicia sesión primero.');
       }
     });
 
-    return () => unsubscribe(); // Limpiamos la suscripción cuando el componente se desmonta
+    return () => unsubscribe();
   }, []);
 
   useEffect(() => {
     if (user) {
-      const getProyectos = async () => {
+      const fetchData = async () => {
         try {
-          const companie_id = await checkUserCompany(user.email); // Obtén el companie_id
+          const companie_id = await checkUserCompany(user.email);
 
           if (companie_id) {
+            // Obtener el nombre de la compañía
+            const companyDoc = await getDoc(doc(db, 'companies', companie_id));
+            if (companyDoc.exists()) {
+              setCompanyName(companyDoc.data().name);
+            } else {
+              throw new Error('La compañía asociada no existe.');
+            }
+
+            // Obtener los proyectos asociados a la compañía
             const proyectosRef = collection(db, 'proyectos');
             const q = query(proyectosRef, where('companie_id', '==', companie_id));
             const querySnapshot = await getDocs(q);
 
-            const proyectosData = querySnapshot.docs.map(doc => ({
-              id: doc.id,  // Añadimos el id del documento
-              ...doc.data()
+            const proyectosData = querySnapshot.docs.map((doc) => ({
+              id: doc.id, // Añadimos el id del documento
+              ...doc.data(),
             }));
-            setProyectos(proyectosData); // Guardamos los proyectos en el estado
+            setProyectos(proyectosData);
           } else {
             setError('No estás asociado a una compañía.');
           }
         } catch (err) {
-          setError('Hubo un error al obtener los proyectos.');
+          setError('Hubo un error al obtener los datos.');
           console.error(err);
         } finally {
           setLoading(false);
         }
       };
 
-      getProyectos();
+      fetchData();
     }
-  }, [user]); // Solo ejecutamos esto cuando el usuario esté autenticado
+  }, [user]);
 
   const handleClickProyecto = (id) => {
-    // Redirigir al usuario a la página del proyecto con el id correspondiente
     window.location.href = `/proyecto/${id}`;
   };
 
@@ -68,7 +77,6 @@ const Dashboard = () => {
       </div>
     );
   }
-  
 
   if (error) {
     return <div className="text-center text-xl text-red-500">{error}</div>;
@@ -76,13 +84,19 @@ const Dashboard = () => {
 
   return (
     <div className="p-6">
-      <h2 className="text-3xl font-semibold text-gray-800 mb-6">Proyectos</h2>
+      <h2 className="text-3xl font-semibold text-gray-800 mb-6">
+        Proyectos de {companyName}
+      </h2>
       {proyectos.length === 0 ? (
         <p className="text-lg text-gray-600">No hay proyectos asociados a tu compañía.</p>
       ) : (
         <ul>
           {proyectos.map((proyecto) => (
-            <li key={proyecto.id} onClick={() => handleClickProyecto(proyecto.id)} className="cursor-pointer mb-4">
+            <li
+              key={proyecto.id}
+              onClick={() => handleClickProyecto(proyecto.id)}
+              className="cursor-pointer mb-4"
+            >
               <div className="bg-white shadow-md rounded-lg p-4 hover:shadow-xl transition-shadow duration-200">
                 <h3 className="text-2xl font-semibold text-gray-800">{proyecto.nombre}</h3>
                 <p className="text-gray-600 mt-2">{proyecto.descripcion}</p>

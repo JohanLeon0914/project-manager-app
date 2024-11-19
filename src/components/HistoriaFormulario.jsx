@@ -8,11 +8,12 @@ const HistoriaFormulario = ({ project_id }) => {
   const [descripcion, setDescripcion] = useState('');
   const [ticketDescripcion, setTicketDescripcion] = useState('');
   const [ticketEstado, setTicketEstado] = useState('Activo');
+  const [ticketComentarios, setTicketComentarios] = useState(''); // Nuevo estado
   const [loading, setLoading] = useState(false);
   const [companieId, setCompanieId] = useState(null);
   const [isLoading, setIsLoading] = useState(true); 
   const [error, setError] = useState(null); 
-  const [user, setUser] = useState(null); 
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((currentUser) => {
@@ -45,7 +46,7 @@ const HistoriaFormulario = ({ project_id }) => {
 
       getCompanieId();
     }
-  }, [user]); 
+  }, [user]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -66,13 +67,13 @@ const HistoriaFormulario = ({ project_id }) => {
           {
             descripcion: ticketDescripcion,
             estado: ticketEstado,
-            comentarios: [],
+            comentarios: ticketComentarios, // Agregado
           },
         ],
       });
 
       alert('Historia de usuario creada exitosamente');
-      window.location.href = '/dashboard'; 
+      window.location.href = `/proyecto/${project_id}`; 
     } catch (error) {
       console.error("Error al crear la historia de usuario: ", error);
       alert('Hubo un error al crear la historia de usuario.');
@@ -102,7 +103,7 @@ const HistoriaFormulario = ({ project_id }) => {
             className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
-  
+
         <div className="mb-6">
           <label className="block text-lg font-semibold text-gray-700 mb-2">Descripción de la historia de usuario:</label>
           <textarea
@@ -112,9 +113,9 @@ const HistoriaFormulario = ({ project_id }) => {
             className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
-  
+
         <h3 className="text-xl font-semibold text-gray-800 mb-4">Primer ticket asociado</h3>
-        
+
         <div className="mb-6">
           <label className="block text-lg font-semibold text-gray-700 mb-2">Descripción del ticket:</label>
           <textarea
@@ -124,7 +125,7 @@ const HistoriaFormulario = ({ project_id }) => {
             className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
-  
+
         <div className="mb-6">
           <label className="block text-lg font-semibold text-gray-700 mb-2">Estado del ticket:</label>
           <select
@@ -138,7 +139,17 @@ const HistoriaFormulario = ({ project_id }) => {
             <option value="Finalizado">Finalizado</option>
           </select>
         </div>
-  
+
+        <div className="mb-6">
+          <label className="block text-lg font-semibold text-gray-700 mb-2">Comentarios del ticket:</label>
+          <textarea
+            value={ticketComentarios}
+            onChange={(e) => setTicketComentarios(e.target.value)}
+            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Añade comentarios adicionales sobre el ticket"
+          />
+        </div>
+
         <button
           type="submit"
           disabled={loading}
@@ -152,3 +163,4 @@ const HistoriaFormulario = ({ project_id }) => {
 };
 
 export default HistoriaFormulario;
+
