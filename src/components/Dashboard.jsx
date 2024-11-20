@@ -101,7 +101,25 @@ const Dashboard = () => {
   }
 
   if (error) {
-    return <div className="text-center text-xl text-red-500 p-4">{error}</div>;
+    return (
+      <div className="flex flex-col items-center justify-center h-screen bg-gray-50">
+        <div className="text-center text-xl text-red-500 p-4">
+          {error === "No estás asociado a una compañía." ? (
+            <>
+              <p>No estás asociado a una compañía.</p>
+              <a
+                href="/company"
+                className="mt-4 inline-block bg-blue-600 text-white py-2 px-6 rounded-lg shadow-md hover:bg-blue-700 hover:shadow-lg transition duration-300"
+              >
+                Asociarme a una compañía
+              </a>
+            </>
+          ) : (
+            <p>{error}</p>
+          )}
+        </div>
+      </div>
+    );
   }
 
   return (
