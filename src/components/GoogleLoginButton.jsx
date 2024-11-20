@@ -68,6 +68,12 @@ const GoogleAuthButton = () => {
           >
             Cerrar sesión
           </button>
+          <button
+            onClick={() => { window.location.href = "/dashboard" }}
+            className="py-2 px-6 bg-blue-500 text-white rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500"
+          >
+            Ver Proyectos
+          </button>
         </div>
       ) : (
         <div className="flex justify-center">
