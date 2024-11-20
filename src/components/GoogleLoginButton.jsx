@@ -39,7 +39,7 @@ const GoogleAuthButton = () => {
       console.log(companyId);
 
       if (!companyId) {
-        window.location.href = "/user_companie";
+        window.location.href = "/company";
       }
     } catch (error) {
       console.error("Error al iniciar sesión:", error);
