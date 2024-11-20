@@ -100,7 +100,7 @@ const ProyectoUsuario = ({ projectId }) => {
               {historias.map((historia) => (
                 <li
                   key={historia.id}
-                  className="bg-gray-100 p-4 rounded-lg shadow-sm cursor-pointer"
+                  className="bg-gray-100 p-4 my-4 rounded-lg shadow-sm hover:shadow-xl cursor-pointer"
                   onClick={() => redirigirAHistoria(historia.id)}
                 >
                   <h4 className="text-xl font-semibold text-gray-800">
