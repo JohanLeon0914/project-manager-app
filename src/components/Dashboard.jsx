@@ -106,11 +106,11 @@ const Dashboard = () => {
 
   return (
     <div className="p-6">
-      <h1 class="text-4xl font-semibold text-gray-800 mb-6">Dashboard</h1>
+      <h1 className="text-4xl font-semibold text-gray-800 mb-6">Dashboard</h1>
 
       <a
         href="/crear-proyecto"
-        class="inline-block bg-blue-600 text-white py-2 px-6 rounded-lg shadow-md hover:bg-blue-700 hover:shadow-lg transition duration-300 mb-6"
+        className="inline-block bg-blue-600 text-white py-2 px-6 rounded-lg shadow-md hover:bg-blue-700 hover:shadow-lg transition duration-300 mb-6"
       >
         Crear nuevo proyecto
       </a>

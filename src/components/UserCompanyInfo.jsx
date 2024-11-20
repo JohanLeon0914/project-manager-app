@@ -1,16 +1,26 @@
 import { useState, useEffect } from "react";
 import { auth, db } from "../lib/firebase";
-import { collection, getDocs, doc, getDoc, updateDoc, query, where } from "firebase/firestore";
+import { collection, getDocs, doc, updateDoc, query, where } from "firebase/firestore";
 import GoogleLoginButton from "./GoogleLoginButton";
-import UserCompanySelector from "./UserCompanySelector"; // Importamos el componente
+import UserCompanySelector from "./UserCompanySelector";
 
 const UserCompanyInfo = () => {
   const [user, setUser] = useState(null);
+  const [authChecking, setAuthChecking] = useState(true); 
   const [companies, setCompanies] = useState([]);
   const [selectedCompanyId, setSelectedCompanyId] = useState(null);
   const [companyInfo, setCompanyInfo] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [updating, setUpdating] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((currentUser) => {
+      setUser(currentUser);
+      setAuthChecking(false); 
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   useEffect(() => {
     const fetchUserAndCompanies = async () => {
@@ -19,7 +29,6 @@ const UserCompanyInfo = () => {
 
         setLoading(true);
 
-        // Obtener la lista de compañías
         const companiesCollection = collection(db, "companies");
         const querySnapshot = await getDocs(companiesCollection);
         const companiesList = querySnapshot.docs.map((doc) => ({
@@ -28,13 +37,12 @@ const UserCompanyInfo = () => {
         }));
         setCompanies(companiesList);
 
-        // Verificar si el usuario tiene una compañía asociada
         const userCompaniesRef = collection(db, "users-companies");
         const userQuery = query(userCompaniesRef, where("user_email", "==", user.email));
         const userCompaniesSnapshot = await getDocs(userQuery);
 
         if (userCompaniesSnapshot.empty) {
-          setSelectedCompanyId(null); // Usuario sin compañía
+          setSelectedCompanyId(null);
           setCompanyInfo(null);
           return;
         }
@@ -58,20 +66,11 @@ const UserCompanyInfo = () => {
     fetchUserAndCompanies();
   }, [user]);
 
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((currentUser) => {
-      setUser(currentUser);
-    });
-
-    return () => unsubscribe();
-  }, []);
-
   const handleChangeCompany = async (e) => {
     try {
       const newCompanyId = e.target.value;
       setUpdating(true);
 
-      // Actualizar la compañía del usuario
       const userCompaniesRef = collection(db, "users-companies");
       const userQuery = query(userCompaniesRef, where("user_email", "==", user.email));
       const userCompaniesSnapshot = await getDocs(userQuery);
@@ -94,6 +93,18 @@ const UserCompanyInfo = () => {
       setUpdating(false);
     }
   };
+
+  if (authChecking) {
+    return (
+      <div className="flex justify-center items-center h-screen bg-gray-50">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500 mx-auto mb-4"></div>
+        <p className="text-xl font-medium text-gray-700">Cargando datos...</p>
+        <p className="text-sm text-gray-500 mt-2">Verificando autenticación...</p>
+      </div>
+    </div>
+    );
+  }
 
   if (loading) {
     return (
@@ -119,7 +130,6 @@ const UserCompanyInfo = () => {
   }
 
   if (!selectedCompanyId) {
-    // Renderizar el componente de selección de compañía si no hay una asociada
     return <UserCompanySelector userEmail={user.email} />;
   }
 
@@ -150,7 +160,7 @@ const UserCompanyInfo = () => {
         )}
       </div>
       <h3 className="text-xl font-semibold text-gray-800 mb-4">Información de la Compañía</h3>
-      {companyInfo ? (
+      {companyInfo && (
         <div className="space-y-4">
           <div>
             <h3 className="text-lg font-semibold text-gray-700">Nombre:</h3>
@@ -173,8 +183,6 @@ const UserCompanyInfo = () => {
             <p className="text-gray-600">{companyInfo.email}</p>
           </div>
         </div>
-      ) : (
-        <p className="text-gray-600">No se encontró información de la compañía.</p>
       )}
     </div>
   );
